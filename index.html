@@ -18,6 +18,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 0; /* nằm dưới */
   }
 
   .credit {
@@ -28,29 +29,32 @@
     font-size: 20px;
     color: white;
     text-shadow: 0 0 8px yellow;
+    z-index: 3;
   }
 
-  /* Container chứa các quote */
+  /* Quote container */
   .quote-container {
     position: absolute;
-    top: 10%;
+    top: 5%;
     width: 100%;
+    height: 90%;
     overflow: hidden;
     pointer-events: none;
+    z-index: 2; /* nằm trên canvas */
   }
 
   .quote {
     position: absolute;
     white-space: nowrap;
-    font-size: 18px;
+    font-size: 20px;
     color: #fffacd;
-    text-shadow: 0 0 8px #fff;
+    text-shadow: 0 0 10px #ffea75, 0 0 5px #ffffff;
     animation: moveQuote linear infinite;
   }
 
   @keyframes moveQuote {
-    from { transform: translateX(100vw); }
-    to { transform: translateX(-100vw); }
+    from { transform: translateX(110vw); opacity: 1; }
+    to { transform: translateX(-120vw); opacity: 0.7; }
   }
 </style>
 </head>
@@ -60,15 +64,14 @@
 <div class="credit">Made by Doan T Kien</div>
 
 <script>
-  // --- Canvas ngôi sao và trái tim ---
+  // --- Canvas sao & tim ---
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
   const shapes = [];
-  const colors = ['#fff', '#fffd87', '#ffffcc', '#fff6a0', '#ffd1d1'];
-  const emojis = ['⭐', '💫', '✨', '💛', '🤍', '💖', '💛', '❤️'];
+  const emojis = ['⭐', '💫', '✨', '💖', '💛', '🤍', '❤️'];
 
   function createShape() {
     return {
@@ -132,24 +135,29 @@
     quote.className = 'quote';
     quote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
 
-    const duration = Math.random() * 10 + 15; // tốc độ khác nhau
-    quote.style.top = Math.random() * 70 + 'vh';
+    const duration = Math.random() * 8 + 15; // tốc độ ngẫu nhiên
+    quote.style.top = Math.random() * 80 + 'vh';
     quote.style.animationDuration = duration + 's';
 
     container.appendChild(quote);
 
     // Xóa sau khi chạy hết
     setTimeout(() => {
-      container.removeChild(quote);
+      if (quote.parentNode) container.removeChild(quote);
     }, duration * 1000);
   }
 
-  // Xuất hiện 4-5 quote chạy cùng lúc
+  // 4–5 quote cùng lúc, chạy liên tục
   setInterval(() => {
     for (let i = 0; i < 5; i++) {
       spawnQuote();
     }
-  }, 6000);
+  }, 5000);
+
+  // Sinh quote ngay khi mở trang (để không phải chờ)
+  for (let i = 0; i < 5; i++) {
+    spawnQuote();
+  }
 </script>
 </body>
 </html>
