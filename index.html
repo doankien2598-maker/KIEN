@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starfall Animation - Made by Doan T Kien</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background-color: black;
+    overflow: hidden;
+    color: white;
+    font-family: monospace;
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .credit {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    color: white;
+    text-shadow: 0 0 8px yellow;
+  }
+
+  /* Container chứa các quote */
+  .quote-container {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .quote {
+    position: absolute;
+    white-space: nowrap;
+    font-size: 18px;
+    color: #fffacd;
+    text-shadow: 0 0 8px #fff;
+    animation: moveQuote linear infinite;
+  }
+
+  @keyframes moveQuote {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-100vw); }
+  }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="quote-container" id="quote-container"></div>
+<div class="credit">Made by Doan T Kien</div>
+
+<script>
+  // --- Canvas ngôi sao và trái tim ---
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const shapes = [];
+  const colors = ['#fff', '#fffd87', '#ffffcc', '#fff6a0', '#ffd1d1'];
+  const emojis = ['⭐', '💫', '✨', '💛', '🤍', '💖', '💛', '❤️'];
+
+  function createShape() {
+    return {
+      x: Math.random() * canvas.width,
+      y: -10,
+      size: Math.random() * 16 + 8,
+      speed: Math.random() * 3 + 2,
+      emoji: emojis[Math.floor(Math.random() * emojis.length)],
+    };
+  }
+
+  for (let i = 0; i < 60; i++) {
+    shapes.push(createShape());
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let s of shapes) {
+      ctx.font = s.size + 'px Arial';
+      ctx.fillText(s.emoji, s.x, s.y);
+      s.y += s.speed;
+      if (s.y > canvas.height) {
+        s.x = Math.random() * canvas.width;
+        s.y = -10;
+        s.speed = Math.random() * 3 + 2;
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+
+  // --- Quotes chạy ngang ---
+  const quotes = [
+    "Dream big, work hard, stay humble.",
+    "Stars can’t shine without darkness.",
+    "Make it simple, but significant.",
+    "Stay patient and trust your journey.",
+    "Be the reason someone smiles today.",
+    "Keep your eyes on the stars and your feet on the ground.",
+    "Do what you love, love what you do.",
+    "Every moment is a fresh beginning.",
+    "Shine like the whole universe is yours.",
+    "Create your own sunshine.",
+    "Failure is not the opposite of success, it’s part of success.",
+    "The best time for new beginnings is now.",
+    "Be fearless in the pursuit of what sets your soul on fire.",
+    "Stay wild, moon child.",
+    "Turn your wounds into wisdom.",
+    "Hustle in silence, let success make the noise.",
+    "Let your light shine bright.",
+    "Sometimes you win, sometimes you learn.",
+    "Stars are born in the darkest night.",
+    "Keep glowing."
+  ];
+
+  const container = document.getElementById('quote-container');
+
+  function spawnQuote() {
+    const quote = document.createElement('div');
+    quote.className = 'quote';
+    quote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+    const duration = Math.random() * 10 + 15; // tốc độ khác nhau
+    quote.style.top = Math.random() * 70 + 'vh';
+    quote.style.animationDuration = duration + 's';
+
+    container.appendChild(quote);
+
+    // Xóa sau khi chạy hết
+    setTimeout(() => {
+      container.removeChild(quote);
+    }, duration * 1000);
+  }
+
+  // Xuất hiện 4-5 quote chạy cùng lúc
+  setInterval(() => {
+    for (let i = 0; i < 5; i++) {
+      spawnQuote();
+    }
+  }, 6000);
+</script>
+</body>
+</html>
